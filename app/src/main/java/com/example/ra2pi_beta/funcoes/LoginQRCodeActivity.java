@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.ra2pi_beta.MainActivity;
 import com.example.ra2pi_beta.PlayActivity;
 import com.example.ra2pi_beta.R;
+import com.example.ra2pi_beta.administradores.MainAdministradoresActivity;
 import com.example.ra2pi_beta.informacao.Tarefas;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,7 +24,6 @@ import com.google.firebase.database.annotations.NotNull;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +37,7 @@ public class LoginQRCodeActivity extends AppCompatActivity {
     private DatabaseReference reference;
     Intent intent;
     int contadorPlanos = 0;
+    boolean isAdmin;
 
 
     @Override
@@ -47,13 +48,9 @@ public class LoginQRCodeActivity extends AppCompatActivity {
 
         keys = new ArrayList<>();
         nomes = new ArrayList<>();
-
         usernames = new ArrayList<>();
-        usernames.add("2160781");
-        usernames.add("2192827");
-        usernames.add("cjrf");
-        usernames.add("onilferreira");
-
+        getUsers();
+        isAdmin = true;
         setContentView(R.layout.activity_login_qrcode);
         new IntentIntegrator(this).initiateScan();
     }
@@ -68,23 +65,60 @@ public class LoginQRCodeActivity extends AppCompatActivity {
             if (username.equals(dados)) {
                 userLogin = username;
                 PlayActivity.Main.user = username;
-                getFirebase(userLogin);
+
+                DatabaseReference reference1 =  mDatabase.child(username);
+                reference1.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                        for(DataSnapshot singleSnapshot : snapshot.getChildren()){
+                            System.out.println(singleSnapshot.getValue().toString());
+                            if (singleSnapshot.getValue().toString().equals("admin")){
+                                isAdmin = true;
+                            }else if (singleSnapshot.getValue().toString().equals("func")){
+                                isAdmin = false;
+                            }
+                            System.out.println(isAdmin);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                    }
+                });
+
+
+
+
+
 
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
-                        getTarefas(contadorPlanos);
+                        System.out.println(isAdmin);
+                        if(!isAdmin){
+                            getFirebase(userLogin);
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                public void run() {
+                                    getTarefas(contadorPlanos);
+                                }
+                            }, 3000);
+                            handler.postDelayed(new Runnable() {
+                                public void run() {
+                                    intent = new Intent(LoginQRCodeActivity.this,
+                                            MainActivity.class);
+                                }
+                            }, 5000);
+                        }else {
+                            intent = new Intent(LoginQRCodeActivity.this,
+                                    MainAdministradoresActivity.class);
+                        }
                     }
                 }, 2000);
 
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        intent = new Intent(LoginQRCodeActivity.this, MainActivity.class);
-                    }
-                }, 3000);
+
+
             }
         }
-
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
@@ -97,12 +131,30 @@ public class LoginQRCodeActivity extends AppCompatActivity {
                 }
 
             }
-        }, 5000);
+        }, 7000);
     }
+
+    public void getUsers(){
+        DatabaseReference reference1 = mDatabase;
+
+        reference1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                for(DataSnapshot singleSnapshot : snapshot.getChildren()){
+                    String nome = singleSnapshot.getKey();
+                    usernames.add(nome);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+            }
+        });
+    }
+
+
 
     public void getFirebase(String username){
         reference = mDatabase.child(username);
-
 
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -113,15 +165,11 @@ public class LoginQRCodeActivity extends AppCompatActivity {
                     String nome = singleSnapshot.child("nome").getValue().toString();
                     nomes.add(nome);
                 }
-
             }
-
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
             }
         });
-
     }
 
     final void getTarefas(int passos){
@@ -143,17 +191,14 @@ public class LoginQRCodeActivity extends AppCompatActivity {
                 }
                 PlayActivity.Main.dadosApp_.adicionarPlano(""+nomes.get(passos), listaPassos);
             }
-
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
 
             }
         });
-
         if(contadorPlanos<keys.size()-1){
             contadorPlanos++;
             getTarefas(contadorPlanos);
         }
-
     }
 }

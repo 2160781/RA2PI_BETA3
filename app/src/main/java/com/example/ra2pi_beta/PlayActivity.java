@@ -14,6 +14,7 @@ public class PlayActivity extends AppCompatActivity {
     public static class Main {
         public static DadosApp dadosApp_;
         public static String user;
+        public static Boolean administrador;
 
     }
 
