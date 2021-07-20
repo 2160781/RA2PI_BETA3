@@ -15,8 +15,18 @@ dos óculos;
 --> Menu plano - Apresentação dos diversos planos existentes, assim como o estado de cada um. Por outro lado, o 
 utilizador poderá adicionar novos planos ou entrar no menu das tarefas de cada plano.
 
-Destas funcionalidades, a que necessitou de ser implementada, não tendo como base o trabalho anterior, corresponde ao 
-iniciar de sessão da aplicação. Inicialmente, achou-se necessária a implementação do iniciar de sessão, através de uma 
-base de dados do tipo firebase, no entanto decidiu-se implementar um sistema de iniciar de sessão com o scan de um QR Code.
-De forma, a possibilitar a utilização de diversas contas, foram implementados quatro casos, duas correspondem aos orientadores, 
-enquanto que as outras correspondem aos estudantes que realizaram este projeto.
+Destas funcionalidades, a que necessitou de ser implementada, não tendo como base o trabalho anterior,
+corresponde ao iniciar de sessão da aplicação e ao armazenamento da informação (base de dados). 
+Inicialmente, achou-se necessária a implementação do iniciar de sessão, que não consistia na leitura
+de um QR Code, no entanto de forma a facilitar o trabalho do utilizador, decidiu-se efetuar esta 
+leitura.
+Por outro lado, o armazenamento de informação consistia num ficheiro JSON que se encontrava 
+dentro da aplicação, no entanto com o objetivo de efetuar uma base de dados, separada da aplicação,
+decidiu-se utilizar a plataforma Firebase. Com a sua utilização foi possível a implementação de 
+uma base de dados que varia de acordo com o utilizador.
+De forma, a possibilitar a utilização de diversas contas, foram implementados quatro casos, duas 
+correspondem aos orientadores (Administradores), enquanto que as outras correspondem aos estudantes 
+que realizaram este projeto.
+Com a entrada de uma das contas dos administradores é possível a adição ou a remoção de planos para 
+cada um dos trabalhadores.
+
