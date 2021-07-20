@@ -19,6 +19,7 @@ import com.google.zxing.integration.android.IntentResult;
 public class PlanoQRCodeActivity extends AppCompatActivity {
 
     String plano;
+    private int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,41 +27,8 @@ public class PlanoQRCodeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_plano_q_r_code);
         new IntentIntegrator(this).initiateScan();
 
-        Toast toast = Toast.makeText(getApplicationContext(), "Voltar atrás: DPAD LEFT",
-                Toast.LENGTH_SHORT);
-        toast.show();
     }
 
-
-    //Não funciona ver
-  /*  @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent main = new Intent(getApplicationContext(),
-                MainActivity.class);
-        startActivity(main);
-    }
-
-    @Override
-    public boolean dispatchKeyEvent( KeyEvent event) {
-        int action = event.getAction();
-        int keyCode = event.getKeyCode();
-
-        switch (keyCode) {
-            //Anterior
-            case KeyEvent.KEYCODE_DPAD_LEFT:
-                if (action == KeyEvent.ACTION_DOWN) {
-
-                    Toast toast = Toast.makeText(getApplicationContext(), "MAU",
-                            Toast.LENGTH_SHORT);
-                    onBackPressed();
-                }
-                return true;
-            default:
-                return super.dispatchKeyEvent(event);
-        }
-    }
-*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -93,10 +61,16 @@ public class PlanoQRCodeActivity extends AppCompatActivity {
 
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
-            new IntentIntegrator(this).initiateScan();
+
+            count++;
+
+            if(count < 3){
+                new IntentIntegrator(this).initiateScan();
+           }else{
+                Intent inicio = new Intent(this,
+                        MainActivity.class);
+                startActivity(inicio);
+            }
         }
-
     }
-
-
 }
