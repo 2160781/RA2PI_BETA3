@@ -50,7 +50,6 @@ public class LoginQRCodeActivity extends AppCompatActivity {
         nomes = new ArrayList<>();
         usernames = new ArrayList<>();
         getUsers();
-        isAdmin = true;
         setContentView(R.layout.activity_login_qrcode);
         new IntentIntegrator(this).initiateScan();
     }
@@ -66,28 +65,26 @@ public class LoginQRCodeActivity extends AppCompatActivity {
                 userLogin = username;
                 PlayActivity.Main.user = username;
 
+                isAdmin = true;
                 DatabaseReference reference1 =  mDatabase.child(username);
-                reference1.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+                reference1.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                        for(DataSnapshot singleSnapshot : snapshot.getChildren()){
-                            System.out.println(singleSnapshot.getValue().toString());
-                            if (singleSnapshot.getValue().toString().equals("admin")){
+                            System.out.println(snapshot.child("tipo").getValue().toString());
+                            if (snapshot.child("tipo").getValue().toString().equals("admin")){
                                 isAdmin = true;
-                            }else if (singleSnapshot.getValue().toString().equals("func")){
+                            }else if (snapshot.child("tipo").getValue().toString().equals("func")){
                                 isAdmin = false;
                             }
                             System.out.println(isAdmin);
                         }
-                    }
+
                     @Override
                     public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
                     }
+
                 });
-
-
-
-
 
 
                 Handler handler = new Handler();
@@ -101,19 +98,19 @@ public class LoginQRCodeActivity extends AppCompatActivity {
                                 public void run() {
                                     getTarefas(contadorPlanos);
                                 }
-                            }, 3000);
+                            }, 2000);
                             handler.postDelayed(new Runnable() {
                                 public void run() {
                                     intent = new Intent(LoginQRCodeActivity.this,
                                             MainActivity.class);
                                 }
-                            }, 5000);
+                            }, 3000);
                         }else {
                             intent = new Intent(LoginQRCodeActivity.this,
                                     MainAdministradoresActivity.class);
                         }
                     }
-                }, 2000);
+                }, 1000);
 
 
 
@@ -131,7 +128,7 @@ public class LoginQRCodeActivity extends AppCompatActivity {
                 }
 
             }
-        }, 7000);
+        }, 5000);
     }
 
     public void getUsers(){
@@ -161,9 +158,14 @@ public class LoginQRCodeActivity extends AppCompatActivity {
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 for(DataSnapshot singleSnapshot : snapshot.getChildren()){
                     String key = singleSnapshot.getKey();
-                    keys.add(key);
-                    String nome = singleSnapshot.child("nome").getValue().toString();
-                    nomes.add(nome);
+
+                    System.out.println(key);
+                    if (!key.equals("tipo")){
+                        keys.add(key);
+                        String nome = singleSnapshot.child("nome").getValue().toString();
+                        nomes.add(nome);
+                    }
+
                 }
             }
             @Override
@@ -173,32 +175,34 @@ public class LoginQRCodeActivity extends AppCompatActivity {
     }
 
     final void getTarefas(int passos){
-        DatabaseReference referencePassos = reference.child(""+passos).child("passos");
-        referencePassos.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+        if(nomes.size() > 0){
+            DatabaseReference referencePassos = reference.child(""+passos).child("passos");
+            referencePassos.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
 
-                int lenght_Passos = Integer.parseInt(""+snapshot.getChildrenCount());
-                Toast toast = Toast.makeText(getApplicationContext(), "Loading...", Toast.LENGTH_SHORT);
-                toast.show();
-                Tarefas[] listaPassos = new Tarefas[lenght_Passos];
-                int i = 0;
-                for(DataSnapshot singleSnapshot : snapshot.getChildren()){
-                    Boolean feito = (Boolean) singleSnapshot.child("feito").getValue();
-                    String nome = (String) singleSnapshot.child("texto").getValue();
-                    listaPassos[i] = new Tarefas(nome,feito);
-                    i++;
+                    int lenght_Passos = Integer.parseInt(""+snapshot.getChildrenCount());
+                    Toast toast = Toast.makeText(getApplicationContext(), "Loading...", Toast.LENGTH_SHORT);
+                    toast.show();
+                    Tarefas[] listaPassos = new Tarefas[lenght_Passos];
+                    int i = 0;
+                    for(DataSnapshot singleSnapshot : snapshot.getChildren()){
+                        Boolean feito = (Boolean) singleSnapshot.child("feito").getValue();
+                        String nome = (String) singleSnapshot.child("texto").getValue();
+                        listaPassos[i] = new Tarefas(nome,feito);
+                        i++;
+                    }
+                    PlayActivity.Main.dadosApp_.adicionarPlano(""+nomes.get(passos), listaPassos);
                 }
-                PlayActivity.Main.dadosApp_.adicionarPlano(""+nomes.get(passos), listaPassos);
-            }
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
 
+                }
+            });
+            if(contadorPlanos<keys.size()-1){
+                contadorPlanos++;
+                getTarefas(contadorPlanos);
             }
-        });
-        if(contadorPlanos<keys.size()-1){
-            contadorPlanos++;
-            getTarefas(contadorPlanos);
         }
     }
 }

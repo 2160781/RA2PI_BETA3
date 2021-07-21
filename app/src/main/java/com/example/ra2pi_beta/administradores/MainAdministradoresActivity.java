@@ -18,6 +18,7 @@ import com.example.ra2pi_beta.R;
 import com.example.ra2pi_beta.funcoes.PlanoQRCodeActivity;
 import com.example.ra2pi_beta.funcoes.activity_ListaPlanos;
 import com.example.ra2pi_beta.funcoes.activity_NavegacaoVoz;
+import com.example.ra2pi_beta.informacao.Plano;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,9 +31,15 @@ import java.util.List;
 
 public class MainAdministradoresActivity extends AppCompatActivity {
 
+
+
     private DatabaseReference mDatabase;
     ListView listViewTrabalhador;
-    String[] usernames;
+    public static class MainAdministradores {
+
+        public  static String[] usernames;
+
+    }
 
 
     @Override
@@ -41,15 +48,17 @@ public class MainAdministradoresActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_administradores);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        listViewTrabalhador = findViewById(R.id.listviewinicial);
+        listViewTrabalhador = findViewById(R.id.listview_usersList);
         getUsers();
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-          //      listviewUtilizadorTrabalhador();
+                listviewUtilizadorTrabalhador();
             }
         }, 3000);
+
+
     }
 
 
@@ -63,12 +72,12 @@ public class MainAdministradoresActivity extends AppCompatActivity {
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 for(DataSnapshot singleSnapshot : snapshot.getChildren()){
                     String username = singleSnapshot.getKey();
-                    Boolean tipo = isTrabalhador(username);
-
+                    String tipo = singleSnapshot.child("tipo").getValue().toString();
                     System.out.println(tipo);
-                    if(tipo){
+
+                    if(tipo.equals("func")){
                         userList.add(username);
-                        Toast toast = Toast.makeText(getApplicationContext(), "" + username
+                        Toast toast = Toast.makeText(getApplicationContext(), "Loading..."
                                 , Toast.LENGTH_SHORT);
                         toast.show();
                         System.out.println(username);
@@ -81,15 +90,17 @@ public class MainAdministradoresActivity extends AppCompatActivity {
             }
         });
 
+
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
                 if(userList != null){
-                    usernames = new String[userList.size()];
+                    MainAdministradores.usernames = new String[userList.size()];
 
                     int i = 0;
                     for (String user:userList) {
-                        usernames[i] = user;
+                        MainAdministradores.usernames[i] = user;
                         i++;
                     }
                 }
@@ -98,44 +109,18 @@ public class MainAdministradoresActivity extends AppCompatActivity {
 
     }
 
-    public boolean isAdministrador(String username){
-        DatabaseReference reference1 = mDatabase.child(username);
-
-        try {
-            reference1.child("tipo").getKey();
-        }catch (Exception e){
-            return false;
-        }
-        return true;
-    }
-
-    public boolean isTrabalhador(String username){
-        DatabaseReference reference1 = mDatabase.child(username);
-        String key = null;
-
-        try {
-            key = reference1.child("0").child("name").getKey();
-        }catch (Exception e){
-
-        }
-
-        if(key.equals(null)){
-            return false;
-        }else{
-            return true;
-        }
-
-    }
-
     public boolean listviewUtilizadorTrabalhador() {
 
-        String[] values = new String[usernames.length+1];
+        String[] values = new String[MainAdministradores.usernames.length+1];
 
-        for(int i = 0; i < values.length; i++) {
-            values[i] = "Trabalhador: " + usernames[i];
+        for(int i = 0; i < values.length-1; i++) {
+            values[i] = "" + MainAdministradores.usernames[i];
         }
 
         values[values.length-1] = "Criar utilizador";
+        System.out.println(values[0]);
+        System.out.println(values[1]);
+        System.out.println(values[2]);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1,
@@ -149,11 +134,18 @@ public class MainAdministradoresActivity extends AppCompatActivity {
 
                 position=position;
 
-                for(int p = 0; p < values.length; p++) {
+                for(int p = 0; p < values.length-1; p++) {
                     if(p == position){
-
+                        Intent intent = new Intent(getApplicationContext(),ViewListPlanosUtilizadorActivity.class);
+                        intent.putExtra("User",MainAdministradores.usernames[p]);
+                        startActivity(intent);
                     }
                 }
+                if (position==values.length-1){
+                    Intent intent = new Intent(getApplicationContext(),CreateUserActivity.class);
+                    startActivity(intent);
+                }
+
 
             }
         });

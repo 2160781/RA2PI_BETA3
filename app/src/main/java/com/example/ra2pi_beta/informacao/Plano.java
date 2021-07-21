@@ -6,7 +6,7 @@ public class Plano {
 
 
 
-    Plano(String texto, Tarefas[] tarefas) {
+    public Plano(String texto, Tarefas[] tarefas) {
         this.texto = texto;
         this.tarefas = tarefas;
 

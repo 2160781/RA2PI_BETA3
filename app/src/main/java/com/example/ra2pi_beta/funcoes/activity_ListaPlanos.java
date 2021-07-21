@@ -27,7 +27,7 @@ public class activity_ListaPlanos extends AppCompatActivity {
 
     public boolean listviewPlanos(){
 
-        listView = findViewById(R.id.listview);
+        listView = findViewById(R.id.listview_usersList);
 
         int numP = PlayActivity.Main.dadosApp_.getNumeroPlanos();
 
