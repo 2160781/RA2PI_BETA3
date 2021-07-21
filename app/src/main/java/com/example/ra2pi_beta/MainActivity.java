@@ -3,7 +3,6 @@ package com.example.ra2pi_beta;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Camera;
-import android.location.GnssAntennaInfo;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -16,11 +15,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.ra2pi_beta.funcoes.PlanoQRCodeActivity;
-import com.example.ra2pi_beta.funcoes.activity_NavegacaoVoz;
-import com.example.ra2pi_beta.funcoes.activity_ListaPlanos;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.example.ra2pi_beta.funcionarios.PlanoQRCodeActivity;
+import com.example.ra2pi_beta.funcionarios.activity_NavegacaoVoz;
+import com.example.ra2pi_beta.funcionarios.activity_ListaPlanos;
 import com.pedro.library.AutoPermissions;
 import com.pedro.library.AutoPermissionsListener;
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".funcoes.activity_ListaPlanos">
+    tools:context=".funcionarios.activity_ListaPlanos">
 
     <ListView
         android:id="@+id/listview_usersList"

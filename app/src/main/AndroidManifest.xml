@@ -13,15 +13,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RA2PI_BETA">
         <activity android:name=".administradores.CreateUserActivity"></activity>
+        <activity android:name=".administradores.CreatePlanoActivity"></activity>
         <activity android:name=".administradores.ViewListTarefasPlanoUtilizadorActivity" />
         <activity android:name=".administradores.ViewListPlanosUtilizadorActivity" />
         <activity android:name=".administradores.MainAdministradoresActivity" />
-        <activity android:name=".funcoes.activity_ListaPlanos" />
-        <activity android:name=".funcoes.PlanoQRCodeActivity" />
-        <activity android:name=".funcoes.LoginQRCodeActivity" />
-        <activity android:name=".funcoes.activity_NavegacaoVoz" />
+        <activity android:name=".funcionarios.activity_ListaPlanos" />
+        <activity android:name=".funcionarios.PlanoQRCodeActivity" />
+        <activity android:name=".funcionarios.LoginQRCodeActivity" />
+        <activity android:name=".funcionarios.activity_NavegacaoVoz" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".funcoes.activity_tarefas" />
+        <activity android:name=".funcionarios.activity_tarefas" />
         <activity android:name=".PlayActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

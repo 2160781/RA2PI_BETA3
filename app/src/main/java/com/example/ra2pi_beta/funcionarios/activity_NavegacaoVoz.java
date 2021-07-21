@@ -1,4 +1,4 @@
-package com.example.ra2pi_beta.funcoes;
+package com.example.ra2pi_beta.funcionarios;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.view.KeyEvent;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 

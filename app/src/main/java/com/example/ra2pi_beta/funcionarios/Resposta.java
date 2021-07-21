@@ -1,4 +1,4 @@
-package com.example.ra2pi_beta.funcoes;
+package com.example.ra2pi_beta.funcionarios;
 
 import android.content.Intent;
 

@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.fonts.SystemFonts;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -13,12 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.ra2pi_beta.PlayActivity;
 import com.example.ra2pi_beta.R;
-import com.example.ra2pi_beta.funcoes.PlanoQRCodeActivity;
-import com.example.ra2pi_beta.funcoes.activity_ListaPlanos;
-import com.example.ra2pi_beta.funcoes.activity_NavegacaoVoz;
-import com.example.ra2pi_beta.informacao.Plano;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

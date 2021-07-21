@@ -90,12 +90,14 @@ public class ViewListPlanosUtilizadorActivity extends AppCompatActivity {
 
     public boolean listviewUtilizadorTrabalhador() {
 
-        String[] values = new String[ViewPlanosAdmin.planos.size()];
+        String[] values = new String[ViewPlanosAdmin.planos.size()+1];
         System.out.println();
-        for(int i = 0; i < values.length; i++) {
+        for(int i = 0; i < values.length-1; i++) {
             values[i] = "" + ViewPlanosAdmin.planos.get(i).getTexto();
 
         }
+
+        values[values.length-1] = "Criar plano";
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1,
@@ -113,6 +115,10 @@ public class ViewListPlanosUtilizadorActivity extends AppCompatActivity {
                     if(p == position){
                         Intent intent = new Intent(getApplicationContext(),ViewListTarefasPlanoUtilizadorActivity.class);
                         intent.putExtra("NomePlano", ViewPlanosAdmin.planos.get(p).getTexto());
+                        startActivity(intent);
+                    }
+                    if (position==values.length-1){
+                        Intent intent = new Intent(getApplicationContext(),CreatePlanoActivity.class);
                         startActivity(intent);
                     }
                 }
