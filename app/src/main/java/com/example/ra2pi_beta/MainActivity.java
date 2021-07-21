@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity  implements AutoPermissionsL
         Toast.makeText(this, "permissions granted"+ strings.length, Toast.LENGTH_SHORT).show();
     }
 
-    class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
+    public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
         private SurfaceHolder mHolder;
         private Camera camera = null;
 

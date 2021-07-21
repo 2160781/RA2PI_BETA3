@@ -2,18 +2,80 @@ package com.example.ra2pi_beta.funcionarios;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Camera;
 import android.os.Bundle;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.ra2pi_beta.MainActivity;
 import com.example.ra2pi_beta.PlayActivity;
 import com.example.ra2pi_beta.R;
+import com.pedro.library.AutoPermissions;
+
+import org.jetbrains.annotations.NotNull;
 
 public class activity_ListaPlanos extends AppCompatActivity {
+
+    public void onRequestPermissionsResult(int requestCode,String permissions[],int[] grantResults){
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        AutoPermissions.Companion.parsePermissions(this,requestCode,permissions,this);
+    }
+    @Override
+    public void onDenied(int i, @NotNull String[] strings) {
+        Toast.makeText(this, "permissions denied"+strings.length, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onGranted(int i, @NotNull String[] strings) {
+        Toast.makeText(this, "permissions granted"+ strings.length, Toast.LENGTH_SHORT).show();
+    }
+
+    class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
+        private SurfaceHolder mHolder;
+        private Camera camera = null;
+
+        public CameraSurfaceView (Context context){
+            super(context);
+            mHolder = getHolder();
+            mHolder.addCallback(this);
+        }
+        public void surfaceCreated(SurfaceHolder holder){
+            camera = Camera.open();
+            try {
+                camera.setPreviewDisplay(mHolder);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+        public void surfaceChanged (SurfaceHolder holder, int format,int width, int height){
+            camera.startPreview();
+        }
+
+        public void surfaceDestroyed (SurfaceHolder holder){
+            camera.stopPreview();
+            camera.release();
+            camera = null;
+        }
+
+        public boolean capture(Camera.PictureCallback handler){
+            if (camera != null){
+                camera.takePicture(null,null,handler);
+                return true;
+            }else {
+                return false;
+            }
+        }
+    }
+
+    MainActivity.CameraSurfaceView cameraView;
 
     ListView listView;
 

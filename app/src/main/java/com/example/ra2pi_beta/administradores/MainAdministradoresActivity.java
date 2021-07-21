@@ -32,6 +32,7 @@ public class MainAdministradoresActivity extends AppCompatActivity {
     public static class MainAdministradores {
 
         public  static String[] usernames;
+        public  static String[] planos;
 
     }
 
